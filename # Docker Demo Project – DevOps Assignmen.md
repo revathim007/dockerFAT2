@@ -1,60 +1,92 @@
-# Docker Demo Project – DevOps Assignment
+# Docker Basic Linux Ops
 
-## 1. DevOps Concepts Used
+## DevOps Concepts
 
-For this assignment, I have applied the following 5 DevOps concepts:
+### Immutable Infrastructure
 
-1. **Version Control (Git)**  
-   - Used to track changes in code files, manage project history, and collaborate effectively.  
+Systems or servers are never modified after deployment; instead, new versions are built and deployed, reducing configuration drift and increasing reliability.
 
-2. **Containerization (Docker)**  
-   - Docker is used to package applications and their dependencies into a single, portable container.
+### Shift-Left Testing
 
-3. **Continuous Integration / Continuous Deployment (CI/CD)**  
-   - Understanding Docker containers prepares for automated build and deployment pipelines in DevOps.
+Integrating testing earlier in the development lifecycle to catch bugs sooner, reduce costs, and improve software quality.
 
-4. **Infrastructure as Code (IaC)**  
-   - Dockerfile acts as code to define the application environment consistently.
+### Blue-Green Deployment
 
-5. **Monitoring and Testing**  
-   - Using Linux commands inside the container helps understand system monitoring and basic testing concepts.
+Deployment strategy where two identical environments (Blue & Green) exist. One serves live traffic while the other is updated, ensuring zero downtime during releases.
+
+### Automated Rollback
+
+Ability to automatically revert to the previous stable version if a deployment fails, ensuring system stability and minimizing downtime.
+
+### Monitoring as Code (MaC)
+
+Using code or configuration files to define monitoring and alerting rules (like Prometheus configs), making monitoring reproducible, version-controlled, and consistent across environments.
 
 ---
 
-## 2. How I Completed the Assignment
+## Step 1: Project Setup
 
-### Docker Steps:
+* Created project folder `docker-basic-linux-ops`.
+* Added files: `Dockerfile`, `run_commands.sh`, `.dockerignore`, `README.md`.
+* Made the script executable:
 
-1. **Create `Dockerfile`** to use Ubuntu base image and install Linux utilities:
+```bash
+chmod +x run_commands.sh
+```
 
-```dockerfile
-FROM ubuntu:22.04
-ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get update && apt-get install -y \
-    curl \
-    git \
-    procps \
-    iproute2 \
-    vim \
-    ca-certificates && \
-    rm -rf /var/lib/apt/lists/*
-RUN useradd -ms /bin/bash devuser
-WORKDIR /home/devuser
-COPY demo.sh /home/devuser/demo.sh
-RUN chmod +x /home/devuser/demo.sh && chown devuser:devuser /home/devuser/demo.sh
-USER devuser
-CMD ["/home/devuser/demo.sh"]
-## How This Helps Learn DevOps, Linux, Git, and Docker
+## Step 2: Git Repository Initialization
 
-- **Docker:**  
-  Learned how to build images, run containers, manage layers, and execute scripts inside a container.
+```bash
+git init
+git add .
+git commit -m "Initial commit: Dockerfile + run_commands script + README"
+```
 
-- **Linux:**  
-  Practiced basic Linux commands (`ls`, `pwd`, `whoami`) in a controlled container environment.
+## Step 3: GitHub Repository
 
-- **Git:**  
-  Learned version control, committing changes, and pushing code to GitHub.
+Created a repository named `docker-basic-linux-ops` on GitHub.
 
-- **DevOps Concepts:**  
-  Understood containerization, infrastructure as code (Dockerfile), and workflow automation.  
-  Learned the importance of reproducibility, automation, and environment management in DevOps.
+```bash
+git remote add origin https://github.com/<github-username>/docker-basic-linux-ops.git
+git branch -M main
+git push -u origin main
+```
+
+## Step 4: Docker Image Build and Run
+
+```bash
+docker build -t docker-basic-linux-ops:1.0 .
+docker run --rm docker-basic-linux-ops:1.0
+```
+
+Executed basic Linux commands:
+`date`, `whoami`, `hostname`, `uname -a`, `df -h`, `free -h`, `ps aux`, `ip addr`, `ls`, `printenv`, `curl`.
+
+## Step 5: Docker Hub Push
+
+```bash
+docker login
+docker tag docker-basic-linux-ops:1.0 <dockerhub-username>/docker-basic-linux-ops:1.0
+docker push <dockerhub-username>/docker-basic-linux-ops:1.0
+```
+
+---
+
+## Question 3: How This Helps Learn DevOps, Linux, Git, and Docker
+
+### Docker
+
+Builds images and runs containers, practicing containerization and reproducible environments.
+
+### Linux
+
+Running `run_commands.sh` reinforces command-line skills: process management, disk and memory usage, network info, environment variables, and HTTP requests.
+
+### Git & GitHub
+
+Practiced version control: commits, branching, pushing, and collaboration workflows.
+
+### DevOps Concepts
+
+Simulates CI/CD pipelines: code → build → container → test → push.
+Demonstrates containerization and system monitoring principles.
